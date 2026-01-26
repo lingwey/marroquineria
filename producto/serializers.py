@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Producto, ProductoImagenes
+from catalogo.serializers import CategoriaSerializer
+from catalogo.models import Categoria
 
 
 class ProductoImagenesSerializers(serializers.ModelSerializer):
@@ -9,6 +11,13 @@ class ProductoImagenesSerializers(serializers.ModelSerializer):
 
 class ProductoSerializer(serializers.ModelSerializer):
     imagenes= ProductoImagenesSerializers(many=True, read_only=True)
+    categoria= CategoriaSerializer(read_only=True)
+    
+    categoria_id= serializers.PrimaryKeyRelatedField(
+        queryset=Categoria.objects.all(),
+        source='categoria',
+        write_only=True,
+    )
     
     subir_imagenes= serializers.ListField(
         child= serializers.ImageField(max_length=10000000, allow_empty_file=False, use_url=False),
@@ -18,7 +27,7 @@ class ProductoSerializer(serializers.ModelSerializer):
     
     class Meta:
         models=Producto
-        fields=['id', 'nombre', 'descripcion', 'precio', 'stock', 'imagenes']
+        fields=['id', 'nombre', 'descripcion', 'precio', 'stock', 'imagenes', 'categoria','categoria_id','slug']
     
     def create (self, validated_data):
         imagenes_data = validated_data.pop('subir_imagenes', [])
