@@ -141,6 +141,5 @@ staticfiles/
 *.sqlite3
 *.db
 
-
-
-
+/productos/galeria/*.png
+/productos/galeria/*.jpg

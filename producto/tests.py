@@ -40,7 +40,15 @@ class ProductoTests(APITestCase):
         self.assertEqual(Producto.objects.get(id=response.data['id']).slug, 'pizza')
         
         # --- SEGUNDO PRODUCTO (Mismo nombre, debe generar slug pizza-1) ---
-        response2 = self.client.post(url, p1_data, format='multipart')
+        p2_data = {
+            'nombre': 'Pizza',
+            'descripcion': 'Otra pizza',
+            'precio': '1200.00',
+            'categoria_id': self.categoria.id,
+            'subir_imagenes': [generate_photo_file(), generate_photo_file()] # ¡Nuevos!
+        }
+        
+        response2 = self.client.post(url, p2_data, format='multipart')
         
         # Si falla, imprimimos el error para saber qué pasó
         if response2.status_code != 201:
