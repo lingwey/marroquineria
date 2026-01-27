@@ -6,7 +6,7 @@ from catalogo.models import Categoria
 
 class ProductoImagenesSerializers(serializers.ModelSerializer):
     class Meta:
-        models=ProductoImagenes
+        model=ProductoImagenes
         fields=['id', 'producto', 'imagen', 'alt_text']
 
 class ProductoSerializer(serializers.ModelSerializer):
@@ -26,8 +26,14 @@ class ProductoSerializer(serializers.ModelSerializer):
     )
     
     class Meta:
-        models=Producto
-        fields=['id', 'nombre', 'descripcion', 'precio', 'stock', 'imagenes', 'categoria','categoria_id','slug']
+        model=Producto
+        fields=['id', 'nombre', 
+            'descripcion', 'precio', 
+            'stock', 'imagenes', 
+            'categoria','categoria_id',
+            'slug','subir_imagenes']
+        read_only_fields=['slug', 'imagenes', 'categoria']
+        
     
     def create (self, validated_data):
         imagenes_data = validated_data.pop('subir_imagenes', [])
