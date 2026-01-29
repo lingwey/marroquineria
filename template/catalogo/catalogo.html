@@ -1,5 +1,37 @@
-{%extends 'base.html'%}
+{% extends 'base.html' %}
 
-{%block content%}
-    
-{%blockend%}
+{% block content %}
+<h2 class="mb-4">Nuestro Catálogo</h2>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for producto in productos %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            {% with primera_img=producto.imagenes.all.0 %}
+                {% if primera_img %}
+                    <img src="{{ primera_img.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x250?text=Sin+Imagen" class="card-img-top" alt="Sin imagen">
+                {% endif %}
+            {% endwith %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ producto.nombre }}</h5>
+                <p class="card-text text-muted small">{{ producto.descripcion|truncatechars:80 }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="h5 mb-0 text-primary">${{ producto.precio }}</span>
+                    <a href="#" class="btn btn-sm btn-outline-dark">Ver más</a>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top-0">
+                <span class="badge bg-secondary">{{ producto.categoria.nombre }}</span>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="alert alert-info text-center">No hay productos disponibles en este momento.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

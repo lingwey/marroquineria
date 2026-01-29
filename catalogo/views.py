@@ -9,6 +9,6 @@ class CategoriaViewSet(viewsets.ModelViewSet):
     serializer_class= CategoriaSerializer
     
 def catalogo_productos(request):
-    productos=Producto.objects.all()
+    productos=Producto.objects.all().select_related('categoria').prefetch_related('imagenes')
     return render(request, 'catalogo/catalogo.html', {'productos':productos})
 
