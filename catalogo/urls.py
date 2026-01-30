@@ -7,6 +7,6 @@ router=DefaultRouter()
 router.register(r'categorias', CategoriaViewSet, basename='categoria')
 
 urlpatterns = [
-    path('productos/', catalogo_productos, name='catalogo_productos'),
+    path('productos-catalogo/', catalogo_productos, name='catalogo_productos'),
     path('', include(router.urls)),
 ]
