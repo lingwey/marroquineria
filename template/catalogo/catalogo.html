@@ -3,16 +3,16 @@
 {% block content %}
 <div class="row">
     <aside class="col-md-3 mb-4">
-        <div class="sidebar shadow-sm">
+        <div class="sidebar shadow-sm p-3 bg-light rounded">
             <h5 class="mb-3 font-weight-bold">Categorías</h5>
             <div class="list-group list-group-flush">
-                <a href="{% url 'catalogo:catalogo_productos' %}" 
-                   class="list-group-item list-group-item-action {% if not request.GET.categoria %}active{% endif %}">
+                <a href="{% url 'catalogo:catalogo_productos' %}{% if query %}?q={{ query }}{% endif %}" 
+                   class="list-group-item list-group-item-action {% if not categoria_seleccionada %}active{% endif %}">
                     Todas
                 </a>
                 {% for categoria in categorias %}
-                <a href="?categoria={{ categoria.id }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
-                   class="list-group-item list-group-item-action {% if request.GET.categoria == categoria.id|stringformat:'s' %}active{% endif %}">
+                <a href="?categoria={{ categoria.id }}{% if query %}&q={{ query }}{% endif %}" 
+                   class="list-group-item list-group-item-action {% if categoria_seleccionada == categoria.id|stringformat:'s' %}active{% endif %}">
                     {{ categoria.nombre }}
                 </a>
                 {% endfor %}
@@ -23,14 +23,13 @@
     <section class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Nuestros Productos</h2>
-            {% if request.GET.q %}
-                <span class="text-muted">Resultados para: "<strong>{{ request.GET.q }}</strong>"</span>
+            {% if query %}
+                <span class="text-muted">Resultados para: "<strong>{{ query }}</strong>"</span>
             {% endif %}
         </div>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for producto in productos %}
-            <div class="col">
+            {% for producto in page_obj %} <div class="col">
                 <div class="card h-100 shadow-sm">
                     {% with primera_img=producto.imagenes.all.0 %}
                         {% if primera_img %}
@@ -55,6 +54,38 @@
             </div>
             {% endfor %}
         </div>
+
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Navegación de páginas" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if categoria_seleccionada %}&categoria={{ categoria_seleccionada }}{% endif %}">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}{% if query %}&q={{ query }}{% endif %}{% if categoria_seleccionada %}&categoria={{ categoria_seleccionada }}{% endif %}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if categoria_seleccionada %}&categoria={{ categoria_seleccionada }}{% endif %}">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
     </section>
 </div>
 {% endblock %}
