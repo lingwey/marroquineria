@@ -44,7 +44,7 @@
                         <p class="h5 text-primary">${{ producto.precio }}</p>
                     </div>
                     <div class="card-footer bg-transparent border-0 d-grid">
-                        <a href="#" class="btn btn-sm btn-outline-dark">Ver detalles</a>
+                        <a href="{%url 'producto:detalles_producto' producto.id %}" class="btn btn-sm btn-outline-dark">Ver detalles</a>
                     </div>
                 </div>
             </div>

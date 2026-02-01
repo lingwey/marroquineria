@@ -1,0 +1,41 @@
+.gallery-container {
+    display: flex;
+    flex-direction: row; /* Miniaturas primero, luego imagen principal */
+    gap: 10px;
+}
+
+.thumbnails-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100px;
+}
+
+.thumb-item {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+}
+
+.active-thumb {
+    border-color: #ffc107 !important;
+}
+
+.main-img-wrapper {
+    flex-grow: 1;
+    height: 500px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#main-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Para que la imagen no se corte */
+}
