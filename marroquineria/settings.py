@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalogo',
     'producto',
+    'carrito',
+    'usuario',
     'rest_framework',
 ]
 
