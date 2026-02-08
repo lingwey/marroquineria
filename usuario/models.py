@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser
 
-class Usuario(AbstractUser):
+class Usuario(AbstractBaseUser):
     email= models.EmailField(unique=True)
     google_id= models.CharField(max_length=255, unique=True)
     nombre= models.CharField(max_length=255)
