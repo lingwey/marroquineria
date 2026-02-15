@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4 text-center border p-5 shadow-sm bg-white rounded">
+        <h3 class="mb-4">Bienvenido</h3>
+        <p class="text-muted mb-4">Ingresá con tu cuenta de Google para gestionar tu carrito y recibir tus comprobantes.</p>
+        
+        <div id="g_id_onload"
+             data-client_id="TU_ID_DE_CLIENTE.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin d-flex justify-content-center" data-type="standard" data-shape="pill"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="{% static 'js/google_auth.js' %}"></script>
+{% endblock %}
