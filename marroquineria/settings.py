@@ -12,6 +12,7 @@ MENSAJE = os.getenv('MENSAJE')
 print(MENSAJE)
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 

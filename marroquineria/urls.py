@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/v1/', include('catalogo.urls')),
     path('api/v1/', include('producto.urls')),
     path('', include("catalogo.urls")),
+    path('usuario/', include('usuario.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
