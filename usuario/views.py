@@ -1,34 +1,35 @@
-from django.http import JsonResponse
-from django.contrib.auth import login
-from google.oauth2 import id_token
-from google.auth.transport import requests
-from .models import Usuario
-from django.conf import settings
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import RegistroUsuario, LoguinForm
+from django.contrib import messages
 
+def registro_usurio(request):
+    if request.method == 'POST':
+        form= RegistroUsuario(request.POST)
+        if form.is_valid():
+            usuario= form.save()
+            messages.success(request, 'usurio registrado correctamente')
+            return redirect('catalogo:catalogo/catalogo.html')
+    else:
+        form= RegistroUsuario()
+    return render(request, 'registro.html', {'form':form})
 
+def login_view(request):
+    if request.method == 'POST':
+        form = LoguinForm(request, data=request.POST)
+        if form.is_valid():
+            usuario=form.get_user()
+            login(request, usuario)
+            messages.success(request, 'usuario logueado correctamente')
+            return redirect('catalogo:catalogo_productos')
+        else:
+            messages.error(request, 'usuario o contraseña incorrectos')
+    else:
+        form= LoguinForm()
+    return render (request, 'login.html', {'form':form})
 
-def google_login_view(request):
-    client_id = settings.GOOGLE_CLIENT_ID
-    # 1. Obtenemos el token que el front-end nos manda
-    token = request.POST.get('id_token')
-    
-    try:
-        # 2. Verificamos con Google si el token es real
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), client_id)
-        
-        # 3. Buscamos al usuario o lo creamos si es su primera vez
-        user, created = Usuario.objects.get_or_create(
-            google_id=idinfo['sub'],
-            defaults={
-                'email': idinfo['email'],
-                'nombre': idinfo.get('name', ''),
-            }
-        )
-        
-        # 4. Iniciamos la sesión en Django
-        login(request, user)
-        
-        return JsonResponse({"status": "ok", "nuevo_usuario": created})
-        
-    except ValueError:
-        return JsonResponse({"status": "error", "message": "Token inválido"}, status=400)
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'usuario deslogueado correctamente')
+    return redirect('catalogo:catalogo_productos')
