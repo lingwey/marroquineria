@@ -13,7 +13,7 @@ class Carrito(models.Model):
     def total_items(self):
         return sum(item.cantidad for item in self.items.all())
     
-    def total_prefcio(self):
+    def total_precio(self):
         return sum(item.subtotal for item in self.items.all())
     
 class ItemCarrito(models.Model):

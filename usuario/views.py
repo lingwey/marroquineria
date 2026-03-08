@@ -1,4 +1,4 @@
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import RegistroUsuario, LoguinForm
@@ -11,36 +11,22 @@ def registro_usurio(request):
             usuario= form.save()
             messages.success(request, 'usurio registrado correctamente')
             login(request, usuario, backend='django.contrib.auth.backends.ModelBackend')
-            print("usuario creado")
             return redirect('catalogo:catalogo_productos')
     else:
         form= RegistroUsuario()
     return render(request, 'usuario/registro_usuario.html', {'form':form})
 
 def login_view(request):
-    print("--- INICIO DE DEBUG DE LOGIN ---")
-    if request.method == 'POST':
-        # 1. Ver qué está llegando del HTML
-        print(f"POST Data: {request.POST}") 
+    if request.method == 'POST': 
         
         form = LoguinForm(request, data=request.POST)
         
         if form.is_valid():
             usuario = form.get_user()
             login(request, usuario, backend='django.contrib.auth.backends.ModelBackend')
-            print(f"ÉXITO: Usuario {usuario.username} validado.")
             return redirect('catalogo:catalogo_productos')
         else:
-            # 2. Ver por qué falló el formulario
-            print(f"ERRORES DEL FORMULARIO: {form.errors.as_data()}")
-            
-            # 3. Prueba manual de fuego
-            username_test = request.POST.get('username')
-            password_test = request.POST.get('password')
-            user_manual = authenticate(username=username_test, password=password_test)
-            print(f"AUTENTICACIÓN MANUAL (Username): {user_manual}")
-            
-            messages.error(request, 'Usuario o contraseña incorrectos')
+           messages.error(request, 'Usuario o contraseña incorrectos')
     else:
         form = LoguinForm()
     
