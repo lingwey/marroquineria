@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Tu Carrito</h2>
+    {% if items %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %} {# Usamos 'items' que viene de la view #}
+                    <tr>
+                        <td>{{ item.producto.categoria }}</td>
+                        <td>{{ item.producto.nombre }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.subtotal }}</td>
+                        <td>
+                            {# Mandamos el ID del producto para que la view lo encuentre #}
+                            <a href="{% url 'carrito:eliminar_del_carrito' item.producto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                            <a href="{% url 'producto:detalles_producto' item.producto.id %}" class="btn btn-danger btn-sm">Ver detalles</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-3">
+            <h4>Total: ${{ total }}</h4>
+            <a href="{% url 'carrito:limpiar_carrito' %}" class="btn btn-warning">Vaciar Carrito</a>
+        </div>
+    {% else %}
+        <p>El carrito está vacío.</p>
+        <a href="{% url 'catalogo:catalogo_productos' %}" class="btn btn-primary">Ir a comprar</a>
+    {% endif %}
+</div>
+{% endblock %}

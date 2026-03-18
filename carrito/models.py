@@ -12,7 +12,7 @@ class Carrito(models.Model):
     
     def total_items(self):
         return sum(item.cantidad for item in self.items.all())
-    
+    @property
     def total_precio(self):
         return sum(item.subtotal for item in self.items.all())
     
@@ -26,7 +26,7 @@ class ItemCarrito(models.Model):
     
     def __str__(self):
         return f"{self.producto.nombre} x {self.cantidad}"
-    
+    @property
     def subtotal(self):
         return self.producto.precio  * self.cantidad
     

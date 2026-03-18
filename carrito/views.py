@@ -7,7 +7,7 @@ from .models import Carrito, ItemCarrito
 @login_required
 def agrear_al_carrito (request, producto_id):
     producto= get_object_or_404(Producto, id=producto_id)
-    carrito= Carrito.objects.get_or_create(usuario=request.user)
+    carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
     item, creado= ItemCarrito.objects.get_or_create(carrito=carrito, producto=producto)
     if not creado:
         item.cantidad+=1
@@ -18,17 +18,23 @@ def agrear_al_carrito (request, producto_id):
     
     item.save()
     
-    return redirect('producto:detalle', pk=producto_id)
+    return redirect('producto:detalles_producto', pk=producto_id)
 
 @login_required
 def eliminar_del_carrito(request, producto_id):
-    carrito, _ = Carrito.objects.get_or_create(usuario= request.user)
+    carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
     item = carrito.items.filter(producto_id=producto_id).first()
+    
     if item:
-        item.delete()
-        messages.warning(request, f"producto eliminado del carrito")
+        if item.cantidad > 1:
+            item.cantidad -= 1
+            item.save()
+            messages.info(request, f"Se quitó una unidad de {item.producto.nombre}")
+        else:
+            item.delete()
+            messages.warning(request, f"Se eliminó {item.producto.nombre} del carrito")
     else:
-        messages.error(request, f"el producto no se encuentrra en el carrito")
+        messages.error(request, "El producto no se encuentra en el carrito")
         
     return redirect('carrito:ver_carrito')
 
@@ -46,6 +52,6 @@ def limpiar_carrito(request):
 def ver_carrito(request):
     carrito, _ = Carrito.objects.get_or_create(usuario= request.user)
     items = carrito.items.select_related('producto')
-    total = carrito.total_precio()
+    total = carrito.total_precio
     return render(request, 'carrito/ver_carrito.html', {'carrito':carrito, 'items':items, 'total':total})
     

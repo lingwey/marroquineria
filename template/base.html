@@ -34,7 +34,24 @@
                                 Hola, {{ user.nombre }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Mis Compras</a></li>
+                                <li>
+
+                                    <!––carrito––>
+
+                                    <div class="dropdown">
+                                        <span>🛒 {{ carrito_global.total_items }} items - ${{ carrito_global.total_precio }}</span>
+                                        <div class="dropdown-content">
+                                            {% for item in carrito_global.items.all %}
+                                                <p>{{ item.producto.nombre }} x {{ item.cantidad }} 
+                                                <a href="{% url 'carrito:eliminar_del_carrito' item.producto.id %}">❌</a>
+                                                </p>
+                                            {% endfor %}
+                                            <hr>
+                                            <a href="{% url 'carrito:ver_carrito' %}">Ver detalle</a>
+                                            <a href="{% url 'carrito:limpiar_carrito' %}">Vaciar</a>
+                                        </div>
+                                    </div>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'usuario:logout' %}">Cerrar Sesión</a></li>
                             </ul>

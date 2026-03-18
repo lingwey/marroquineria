@@ -45,10 +45,13 @@
         </div>
 
         <div class="d-grid gap-3">
-            <button class="btn btn-warning btn-lg fw-bold">
+            <a class="btn btn-warning btn-lg fw-bold" href="{% url  'carrito:agregar_al_carrito' producto.id %}">
                 <i class="bi bi-cart-plus"></i> Agregar al carrito
-            </button>
-            <a href="https://wa.me/+5491153254842" class="btn btn-outline-dark">Consultar por WhatsApp</a>
+            </a>
+            <a href="https://wa.me/+5491153254842?text=Hola! Estoy interesado en {{ producto.nombre }}" 
+            class="btn btn-outline-dark" target="_blank">
+            Consultar por WhatsApp
+            </a>
         </div>
     </div>
 </div>
